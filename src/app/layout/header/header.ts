@@ -8,4 +8,13 @@ import { Component } from '@angular/core';
 })
 export class Header {
 
+  path = "";
+  btn_text = "Neues Produkt";
+
+  ngOnInit() {
+    this.path = "";
+    if (this.path == "detail") {
+      this.btn_text = "zurück zur Liste";
+    }
+  }
 }
