@@ -10,14 +10,17 @@
             </tr>
         </thead>
         <tbody>
+            @for (item of list; track item.name; let index = $index) {
             <tr role="link">
-                <td>Computermaus</td>
-                <td>optisch, USB-Anschluss, schwarz</td>
-                <td><span class="badge ok">104</span></td>
-                <td class="price">18,00</td>
+                <td>{{item.name}}</td>
+                <td>{{item.specs}}</td>
+                <td><span class="badge ok">{{item.stock}}</span></td>
+                <td class="price">{{item.price}}</td>
                 <td><a class="btn--view" aria-label="Details anzeigen"></a></td>
             </tr>
-            <tr role="link">
+            }
+            <!-- ersetzt durch die @for oben
+                <tr role="link">
                 <td>HDMI-Kabel High-Speed</td>
                 <td>2 m, vergoldete Stecker</td>
                 <td><span class="badge low">64</span></td>
@@ -37,7 +40,7 @@
                 <td><span class="badge ok">146</span></td>
                 <td class="price">18,99</td>
                 <td><a class="btn--view" aria-label="Details anzeigen"></a></td>
-            </tr>
+            </tr> -->
         </tbody>
     </table>
 </section>
