@@ -5,5 +5,5 @@ import { ProductDetail } from './shared/components/product-detail/product-detail
 
 export const routes: Routes = [
     { path: "", component: ProductList },
-    { path: "detail", component: ProductDetail }
+    { path: "detail/:name", component: ProductDetail } // name = Parametername
 ];
