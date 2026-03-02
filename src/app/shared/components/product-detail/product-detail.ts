@@ -14,22 +14,33 @@ export class ProductDetail {
   productService = inject(Products);
 
 
-  detail = {
-    // quasi als default
-    "name": "n/a",
-    "description": "n/a",
-    "specs": "n/a",
-    "stock": 0,
-    "price": 0
-  }
+  // detail = { wegen signals entfernt
+  //   // quasi als default
+  //   "name": "n/a",
+  //   "description": "n/a",
+  //   "specs": "n/a",
+  //   "stock": 0,
+  //   "price": 0
+  // }
+
+  detail = this.productService.productdetail; // neu wegen signals
 
   ngOnInit() {
     let currentName = this.route.snapshot.paramMap.get('name')
     if (currentName) this.productService.setProductDetailByName(currentName)
-    this.detail = this.productService.productdetail
+    // this.detail = this.productService.productdetail; // hier entfernt wegen signals
+
+    // für Beispiel ohne Signals
+    // in "products.ts" verschoben ist es das gleiche,  
+    // setTimeout funktioniert erst, wenn man auf den löschen Button clickt.
+    // bzw die Änderung wird schon durchgeführt, aber man sieht es erst wenn der Button geclickt wird.
+    // Der Button löst eine change direction aus
+    // setTimeout(() => {
+    //   this.detail.description = "banana"
+    // }, 2000)
   }
 
   deleteDetail() {
-    this.detail.name = "";
+    // this.detail.name = "";
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Product } from '../interfaces/product';
 
 @Injectable({
@@ -7,18 +7,38 @@ import { Product } from '../interfaces/product';
 export class Products {
   productlist: Product[] = []
 
-  productdetail: Product = {
+  // productdetail: Product = { erstetzt durch signal
+  //   // quasi als default
+  //   "name": "n/a",
+  //   "description": "n/a",
+  //   "specs": "n/a",
+  //   "stock": 0,
+  //   "price": 0
+  // }
+
+  productdetail = signal<Product>({
     // quasi als default
     "name": "n/a",
     "description": "n/a",
     "specs": "n/a",
     "stock": 0,
     "price": 0
-  }
+  })
 
   setProductDetailByName(name: string) {
     let tmpProduct = this.productlist.find(product => product.name == name)
-    if (tmpProduct) this.productdetail = tmpProduct
+    // if (tmpProduct) this.productdetail = tmpProduct; // ersetzt wegen signal
+    if (tmpProduct) this.productdetail.set(tmpProduct);
+
+    // für Beispiel ohne Signals
+    // in "product-details.ts" verschoben ist es das gleiche,  
+    // setTimeout funktioniert erst, wenn man auf den löschen Button clickt.
+    // bzw die Änderung wird schon durchgeführt, aber man sieht es erst wenn der Button geclickt wird.
+    // Der Button löst eine change direction aus
+    setTimeout(() => {
+      //this.productdetail.description = "banana" // ersetzt wegen signal
+      this.productdetail.update(product => ({ ...product, description: "banana" }))
+    }, 2000)
   }
 
   constructor() {
