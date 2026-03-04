@@ -1,7 +1,7 @@
 <header class="main-header">
     <h1 class="main-header__title">Produkte</h1>
 
-    <a class="btn" [class.btn--primary]="path==''" [class.btn--secondary]="path=='detail'">
+    <a routerLink="productform" class="btn" [class.btn--primary]="path==''" [class.btn--secondary]="path=='detail'">
         <!-- über proberty Binding wird die Klasse "btn--primary" nur hinzugefügt, wenn der "path" (Endstück von unserer URL) leer ist.
                  Wenn "path" auf "detail" ist, dann wird die Klasse "btn-secondary" hinzugefügt. -->
 
