@@ -5,7 +5,7 @@ import { Product } from '../interfaces/product';
   providedIn: 'root',
 })
 export class Products {
-  productlist: Product[] = []
+  productlist = signal<Product[]>([])
 
   // productdetail: Product = { erstetzt durch signal
   //   // quasi als default
@@ -25,8 +25,12 @@ export class Products {
     "price": 0
   })
 
+  addProduct(product:Product) {
+    this.productlist.update(list => [...list, product])
+  }
+
   setProductDetailByName(name: string) {
-    let tmpProduct = this.productlist.find(product => product.name == name)
+    let tmpProduct = this.productlist().find(product => product.name == name)
     // if (tmpProduct) this.productdetail = tmpProduct; // ersetzt wegen signal
     if (tmpProduct) this.productdetail.set(tmpProduct);
 
@@ -35,14 +39,14 @@ export class Products {
     // setTimeout funktioniert erst, wenn man auf den löschen Button clickt.
     // bzw die Änderung wird schon durchgeführt, aber man sieht es erst wenn der Button geclickt wird.
     // Der Button löst eine change direction aus
-    setTimeout(() => {
+    // setTimeout(() => {
       //this.productdetail.description = "banana" // ersetzt wegen signal
-      this.productdetail.update(product => ({ ...product, description: "banana" }))
-    }, 2000)
+  //     this.productdetail.update(product => ({ ...product, description: "banana" }))
+  //   }, 2000)
   }
 
   constructor() {
-    this.productlist = [
+    this.productlist.set([
       {
         "name": "Gaming Maus",
         "description": "Eine ergonomische Gaming-Maus mit hoher Präzision und einstellbarer DPI.Ideal für FPS- und MOBA - Spiele, bietet sie eine langlebige Bauweise und komfortable Seitentasten für schnelles Reagieren.",
@@ -85,6 +89,6 @@ export class Products {
         "stock": 150,
         "price": 59.95
       }
-    ]
+    ])
   }
 }
