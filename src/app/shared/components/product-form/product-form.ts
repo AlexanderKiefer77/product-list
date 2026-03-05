@@ -19,8 +19,9 @@ export class ProductForm {
     name: new FormControl('n/a', { validators: [Validators.required, Validators.minLength(3)] }),
     description: new FormControl('n/a'),
     //specs: new FormControl('n/a'),
-    stock: new FormControl(0, { validators: [Validators.required, Validators.minLength(0)] }),
-    price: new FormControl(0.00, { validators: [Validators.required, Validators.minLength(0)] }),
+    // .minLength bezieht sich auf Strings, min bei Zahlen. mit 0 ist kein negativer Wert möglich, nur positve
+    stock: new FormControl(0, { validators: [Validators.required, Validators.min(0)] }),
+    price: new FormControl(0.00, { validators: [Validators.required, Validators.min(0)] }),
   });
 
   onSubmit() {
