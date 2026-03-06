@@ -57,7 +57,8 @@ export class Products {
       .select('*')
 
     console.log(response.data);
-    
+    this.productlist.set((response.data ?? []) as Product[])
+    // eine Variante, nur verwenden, wenn man ganz sicher ist, was aus der Datenbank kommt. Sonst mit einem Model siehe "productmodel.ts" arbeiten.
   }
 
   constructor() {
