@@ -1,10 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 import { Product } from '../interfaces/product';
+import { createClient } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Products {
+
+  
+  supabase = createClient('', '')
+
+
   productlist = signal<Product[]>([])
 
   // productdetail: Product = { erstetzt durch signal
@@ -25,7 +31,7 @@ export class Products {
     "price": 0
   })
 
-  addProduct(product:Product) {
+  addProduct(product: Product) {
     this.productlist.update(list => [...list, product])
   }
 
@@ -40,12 +46,22 @@ export class Products {
     // bzw die Änderung wird schon durchgeführt, aber man sieht es erst wenn der Button geclickt wird.
     // Der Button löst eine change direction aus
     // setTimeout(() => {
-      //this.productdetail.description = "banana" // ersetzt wegen signal
-  //     this.productdetail.update(product => ({ ...product, description: "banana" }))
-  //   }, 2000)
+    //this.productdetail.description = "banana" // ersetzt wegen signal
+    //     this.productdetail.update(product => ({ ...product, description: "banana" }))
+    //   }, 2000)
+  }
+
+  async getAllProductsFromDB() {
+    let response = await this.supabase
+      .from('products')
+      .select('*')
+
+    console.log(response.data);
+    
   }
 
   constructor() {
+    this.getAllProductsFromDB();
     this.productlist.set([
       {
         "name": "Gaming Maus",
