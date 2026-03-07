@@ -11,6 +11,7 @@ export class Products {
   
   supabase = createClient('', '')
 
+  productlistInsertChannel;
 
   productlist = signal<Product[]>([])
 
@@ -33,17 +34,38 @@ export class Products {
     "price": 0
   })
 
+
+  constructor() {
+    this.getAllProductsFromDB();
+
+    this.productlistInsertChannel = this.supabase.channel('custom-insert-channel')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'products' },
+        (payload) => {
+          let tmpProduct = new ProductModel(payload.new)
+          this.productlist.update(list => [...list, tmpProduct])
+          // console.log('Change received', payload.new);
+        }
+      )
+      .subscribe()
+  }
+
+  ngOnDestroy() { // Muss da sein bei einem subscribe 
+    this.supabase.removeChannel(this.productlistInsertChannel)
+  }
+
   async addProduct(product: ProductModel) {
     // console.log(product.getCleanAddJson());
     const product_data = product.getCleanAddJson();
     const { data, error } = await this.supabase
-    .from('products')
-    .insert([
-      product_data
-    ])
-    .select()
+      .from('products')
+      .insert([
+        product_data
+      ])
+      .select()
 
-    this.productlist.update(list => [...list, product])
+    // this.productlist.update(list => [...list, product]) // verschoben in Verbindung subscribe in constructor
   }
 
   setProductDetailByName(name: string) {
@@ -78,7 +100,4 @@ export class Products {
     // eine Variante, nur verwenden, wenn man ganz sicher ist, was aus der Datenbank kommt. Sonst mit einem Model siehe "productmodel.ts" arbeiten.
   }
 
-  constructor() {
-    this.getAllProductsFromDB();
-  }
 }
