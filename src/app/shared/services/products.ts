@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Product } from '../interfaces/product';
 import { createClient } from '@supabase/supabase-js';
+import { ProductModel } from '../models/productmodel';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,16 @@ export class Products {
     "price": 0
   })
 
-  addProduct(product: Product) {
+  async addProduct(product: ProductModel) {
+    // console.log(product.getCleanAddJson());
+    const product_data = product.getCleanAddJson();
+    const { data, error } = await this.supabase
+    .from('products')
+    .insert([
+      product_data
+    ])
+    .select()
+
     this.productlist.update(list => [...list, product])
   }
 

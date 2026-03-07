@@ -17,4 +17,14 @@ export class ProductModel implements Product {
         this.stock = data.stock ?? 0;
         this.price = data.price ?? 0;
     }
+
+    getCleanAddJson() { // für ein neues Produkt ohne ID zur DB hinzuzufügen
+        return {
+            name: this.name,
+            description: this.description,
+            specs: this.specs,
+            stock: this.stock,
+            price: this.price,
+        }
+    }
 }
