@@ -26,8 +26,8 @@ export class ProductDetail {
   detail = this.productService.productdetail; // neu wegen signals
 
   ngOnInit() {
-    let currentName = this.route.snapshot.paramMap.get('name')
-    if (currentName) this.productService.setProductDetailByName(currentName)
+    let currentid = Number(this.route.snapshot.paramMap.get('id'));
+    if (currentid) this.productService.setProductDetailById(currentid)
     // this.detail = this.productService.productdetail; // hier entfernt wegen signals
 
     // für Beispiel ohne Signals
