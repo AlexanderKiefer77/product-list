@@ -11,7 +11,8 @@ export class Products {
   
   supabase = createClient('', '')
 
-  productlistInsertChannel;
+  productlistInsertChannel; // für Funktion Produkt hinzufügen
+  productlistDeleteChannel; // für Funktion Produkt löschen
 
   productlist = signal<Product[]>([])
 
@@ -38,6 +39,7 @@ export class Products {
   constructor() {
     this.getAllProductsFromDB();
 
+    // Neues Produkt hinzufügen
     this.productlistInsertChannel = this.supabase.channel('custom-insert-channel')
       .on(
         'postgres_changes',
@@ -49,10 +51,26 @@ export class Products {
         }
       )
       .subscribe()
+
+    // Produkt löschen
+    this.productlistDeleteChannel = this.supabase.channel('custom-delete-channel')
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'products' },
+        (payload) => {
+          // console.log(payload);
+
+          let tmpProductID = payload.old["id"]
+          this.productlist.update(list => list.filter(product => product.id != tmpProductID))
+        }
+      )
+      .subscribe()
+
   }
 
   ngOnDestroy() { // Muss da sein bei einem subscribe 
     this.supabase.removeChannel(this.productlistInsertChannel)
+    this.supabase.removeChannel(this.productlistDeleteChannel)
   }
 
   async addProduct(product: ProductModel) {
@@ -67,6 +85,14 @@ export class Products {
 
     // this.productlist.update(list => [...list, product]) // verschoben in Verbindung subscribe in constructor
   }
+
+  async deleteProduct(id: number) {
+    const { error } = await this.supabase
+      .from('products')
+      .delete()
+      .eq('id', id)
+  }
+
 
   setProductDetailByName(name: string) {
     let tmpProduct = this.productlist().find(product => product.name == name)
@@ -95,7 +121,7 @@ export class Products {
       .from('products')
       .select('*')
 
-    console.log(response.data);
+    // console.log(response.data);
     this.productlist.set((response.data ?? []) as Product[])
     // eine Variante, nur verwenden, wenn man ganz sicher ist, was aus der Datenbank kommt. Sonst mit einem Model siehe "productmodel.ts" arbeiten.
   }

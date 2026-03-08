@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Products } from '../../services/products';
 
 @Component({
@@ -11,6 +11,7 @@ import { Products } from '../../services/products';
 export class ProductDetail {
 
   private route = inject(ActivatedRoute);
+  router = inject(Router); // für Funktion Produkt löschen
   productService = inject(Products);
 
 
@@ -28,6 +29,7 @@ export class ProductDetail {
   ngOnInit() {
     let currentid = Number(this.route.snapshot.paramMap.get('id'));
     if (currentid) this.productService.setProductDetailById(currentid)
+
     // this.detail = this.productService.productdetail; // hier entfernt wegen signals
 
     // für Beispiel ohne Signals
@@ -40,7 +42,8 @@ export class ProductDetail {
     // }, 2000)
   }
 
-  deleteDetail() {
-    // this.detail.name = "";
+  async deleteDetail() {
+    this.productService.deleteProduct(this.detail().id)
+    this.router.navigate([""])
   }
 }
